@@ -13,7 +13,6 @@ public class MyServiceImpl implements MyService {
   @Autowired
   private MyDao myDao;
 
-  @PreAuthorize("hasRole('ADMIN')")
   @Override
   public String getMovie() {
     System.out.println("執行 MyService 的 getMovie 方法");
