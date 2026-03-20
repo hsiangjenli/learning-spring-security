@@ -9,24 +9,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyServiceImpl implements MyService {
 
-    @Autowired
-    private MyDao myDao;
 
-    @Override
-    public String getMovie() {
-        System.out.println("執行 MyService 的 getMovie 方法");
+  @Autowired
+  private MyDao myDao;
 
-        myDao.getMovie();
+  @PreAuthorize("hasRole('ADMIN')")
+  @Override
+  public String getMovie() {
+    System.out.println("執行 MyService 的 getMovie 方法");
 
-        return "成功取得電影";
-    }
+    myDao.getMovie();
 
-    @Override
-    public String deleteMovie() {
-        System.out.println("執行 MyService 的 deleteMovie 方法");
+    return "成功取得電影";
+  }
 
-        myDao.deleteMovie();
+  @Override
+  public String deleteMovie() {
+    System.out.println("執行 MyService 的 deleteMovie 方法");
 
-        return "成功刪除電影";
-    }
+    myDao.deleteMovie();
+
+    return "成功刪除電影";
+  }
 }
