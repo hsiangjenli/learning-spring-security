@@ -23,16 +23,12 @@ public class MySecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults())
+        return http.csrf(csrf -> csrf.disable()).httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
 
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/welcome", "/register").permitAll()
-                        .requestMatchers("/hello").authenticated()
-                        .anyRequest().denyAll()
-                )
+                .authorizeHttpRequests(request -> request.requestMatchers("/register").permitAll()
+                        .requestMatchers("/welcome").hasRole("ADMIN").requestMatchers("/hello")
+                        .authenticated().anyRequest().denyAll())
 
                 .build();
     }

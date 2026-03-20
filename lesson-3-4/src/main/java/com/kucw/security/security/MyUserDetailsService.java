@@ -2,8 +2,10 @@ package com.kucw.security.security;
 
 import com.kucw.security.dao.MemberDao;
 import com.kucw.security.model.Member;
+import com.kucw.security.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,11 +35,24 @@ public class MyUserDetailsService implements UserDetailsService {
             String memberEmail = member.getEmail();
             String memberPassword = member.getPassword();
 
+            List<Role> roles = memberDao.getRolesByMemberId(member.getMemberId());
+
             // 權限部分，先不用管
-            List<GrantedAuthority> authorities = new ArrayList<>();
+            List<GrantedAuthority> authorities = convertToAuthorities(roles);
 
             // 轉換成 Spring Security 指定的 User 格式
             return new User(memberEmail, memberPassword, authorities);
         }
+    }
+
+
+    private List<GrantedAuthority> convertToAuthorities(List<Role> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        }
+
+        return authorities;
     }
 }
