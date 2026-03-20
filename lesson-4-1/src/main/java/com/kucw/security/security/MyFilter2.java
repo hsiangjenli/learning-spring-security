@@ -12,6 +12,14 @@ public class MyFilter2 extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
     System.out.println("執行 MyFilter 2");
-    filterChain.doFilter(request, response);
+    String url = request.getRequestURI();
+
+    if (url.equals("/hello")) {
+      System.out.println("path = hello 通過");
+      filterChain.doFilter(request, response);
+    } else {
+      System.out.println("path 不是 hello");
+      response.setStatus(500);
+    }
   }
 }
