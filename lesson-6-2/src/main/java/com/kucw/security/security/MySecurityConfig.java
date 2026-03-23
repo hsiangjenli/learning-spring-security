@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -29,7 +32,14 @@ public class MySecurityConfig {
 
     return http
 
-        // .csrf(csrf -> csrf.disable())
+        // 設定 session 的創建機制
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+
+        .csrf(csrf -> csrf
+
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+
+            .csrfTokenRequestHandler(createCsrfHandler()))
 
         .httpBasic(Customizer.withDefaults())
 
@@ -39,4 +49,11 @@ public class MySecurityConfig {
 
         .build();
   }
+
+  private CsrfTokenRequestAttributeHandler createCsrfHandler() {
+    CsrfTokenRequestAttributeHandler csrfHandler = new CsrfTokenRequestAttributeHandler();
+    csrfHandler.setCsrfRequestAttributeName(null);
+    return csrfHandler;
+  }
+
 }
