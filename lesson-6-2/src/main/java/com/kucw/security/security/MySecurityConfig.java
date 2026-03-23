@@ -39,13 +39,21 @@ public class MySecurityConfig {
 
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
-            .csrfTokenRequestHandler(createCsrfHandler()))
+            .csrfTokenRequestHandler(createCsrfHandler())
+
+            .ignoringRequestMatchers("/register", "/userLogin")
+
+        )
 
         .httpBasic(Customizer.withDefaults())
 
         .formLogin(Customizer.withDefaults())
 
-        .authorizeHttpRequests(request -> request.anyRequest().authenticated())
+        .authorizeHttpRequests(request -> request
+
+            .requestMatchers("/register", "/userLogin").permitAll()
+
+            .anyRequest().authenticated())
 
         .build();
   }
