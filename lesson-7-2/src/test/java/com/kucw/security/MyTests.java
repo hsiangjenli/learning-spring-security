@@ -16,56 +16,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class MyTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @Test
-    public void testHello() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/hello")
-                .header("Authorization", "Basic dGVzdDFAZ21haWwuY29tOjExMQ==");
+  @Test
+  public void testHello() throws Exception {
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
 
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().is(200));
-    }
+        .get("/hello")
 
-    @Test
-    public void testHello2() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/hello")
-                .with(httpBasic("test1@gmail.com", "111"));
+        .header("Authorization", "Basic dGVzdDFAZ21haWwuY29tOjExMQ==");
 
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().is(200));
-    }
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+  }
 
-    @Test
-    public void testWelcome() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/welcome")
-                .with(httpBasic("test1@gmail.com", "111"));
+  @Test
+  public void testHello2() throws Exception {
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
 
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().is(200));
-    }
+        .get("/hello")
 
-    @Test
-    public void testWelcome2() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/welcome")
-                .with(httpBasic("test2@gmail.com", "222"));
+        .with(httpBasic("test1@gmail.com", "111"));
 
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().is(403));
-    }
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+  }
 
-    @WithMockUser(username = "mock", roles = { "NORMAL_MEMBER" })
-    @Test
-    public void testWelcome3() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/welcome");
+  @Test
+  public void testWelcome() throws Exception {
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
 
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().is(403));
-    }
+        .get("/welcome")
+
+        .with(httpBasic("test1@gmail.com", "111"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+  }
+
+  @Test
+  public void testWelcome2() throws Exception {
+    RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get("/welcome").with(httpBasic("test2@gmail.com", "222"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(403));
+  }
+
+  @WithMockUser(username = "mock", roles = {"NORMAL_MEMBER"})
+  @Test
+  public void testWelcome3() throws Exception {
+    RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/welcome");
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(403));
+  }
 }
