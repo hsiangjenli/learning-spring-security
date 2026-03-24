@@ -30,6 +30,8 @@ public class MySecurityConfig {
 
                         .requestMatchers("/register").permitAll() // 將開放 /register 給所有人
 
+                        .requestMatchers("/userLogin").authenticated()
+
                         .anyRequest().authenticated())
 
                 .build();
