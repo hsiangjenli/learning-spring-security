@@ -21,15 +21,15 @@ public class MySecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http
-                .csrf(csrf -> csrf.disable())
+        return http.csrf(csrf -> csrf.disable())
 
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults()).formLogin(Customizer.withDefaults())
 
                 .authorizeHttpRequests(request -> request
-                        .anyRequest().authenticated()
-                )
+
+                        .requestMatchers("/register").permitAll() // 將開放 /register 給所有人
+
+                        .anyRequest().authenticated())
 
                 .build();
     }
