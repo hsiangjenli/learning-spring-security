@@ -7,7 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 import com.kucw.security.dao.MemberDao;
+import com.kucw.security.dao.RoleDao;
 import com.kucw.security.model.Member;
+import com.kucw.security.model.Role;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -17,6 +19,9 @@ public class MemberController {
 
   @Autowired
   private MemberDao memberDao;
+
+  @Autowired
+  private RoleDao roleDao;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -29,6 +34,10 @@ public class MemberController {
     member.setPassword(encodedPassword);
 
     Integer memberId = memberDao.createMember(member);
+
+    // 為 Member 新增 Role
+    Role role = roleDao.getRoleByName("ROLE_NORMAL_MEMBER");
+    memberDao.addRoleForMemberId(memberId, role);
 
     return "註冊成功";
 
