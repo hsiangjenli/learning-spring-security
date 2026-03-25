@@ -43,6 +43,12 @@ public class MemberControllerTest {
         .content(json);
 
     mockMvc.perform(requestBuilder).andExpect(status().is(200));
+
+
+    // 嘗試登入
+    RequestBuilder requestBuilderLogin =
+        MockMvcRequestBuilders.post("/userLogin").with(httpBasic("test1@gmail.com", "test1"));
+    mockMvc.perform(requestBuilderLogin).andExpect(status().is(200));
   }
 
   @Test
