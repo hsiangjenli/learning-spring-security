@@ -1,10 +1,14 @@
 package com.kucw.security.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -14,29 +18,136 @@ public class MovieControllerTest {
   private MockMvc mockMvc;
 
   @Test
-  public void getMovies_normalMember_success() throws Exception {}
+  public void getMovies_normalMember_success() throws Exception {
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+
+        .get("/getMovies")
+
+        .with(httpBasic("normal@gmail.com", "normal"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+
+  }
 
   @Test
-  public void watchFreeMovie_normalMember_success() throws Exception {}
+  public void watchFreeMovie_normalMember_success() throws Exception {
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+
+        .post("/watchFreeMovie")
+
+        .with(httpBasic("normal@gmail.com", "normal"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+
+  }
 
   @Test
-  public void watchFreeMovie_vipMember_success() throws Exception {}
+  public void watchFreeMovie_vipMember_success() throws Exception {
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+
+        .post("/watchFreeMovie")
+
+        .with(httpBasic("vip@gmail.com", "vip"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+
+  }
 
   @Test
-  public void watchVipMovie_normalMember_fail() throws Exception {}
+  public void watchVipMovie_normalMember_fail() throws Exception {
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+
+        .post("/watchVipMovie")
+
+        .with(httpBasic("normal@gmail.com", "normal"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(403));
+
+  }
 
   @Test
-  public void watchVipMovie_vipMember_success() throws Exception {}
+  public void watchVipMovie_vipMember_success() throws Exception {
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+
+        .post("/watchVipMovie")
+
+        .with(httpBasic("vip@gmail.com", "vip"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+
+  }
 
   @Test
-  public void uploadMovie_normalMember_vipMember_fail() throws Exception {}
+  public void uploadMovie_normalMember_vipMember_fail() throws Exception {
+
+    RequestBuilder requestBuilderNormal = MockMvcRequestBuilders
+
+        .post("/uploadMovie")
+
+        .with(httpBasic("normal@gmail.com", "normal"));
+
+    RequestBuilder requestBuilderVip = MockMvcRequestBuilders
+
+        .post("/uploadMovie")
+
+        .with(httpBasic("vip@gmail.com", "vip"));
+
+
+    mockMvc.perform(requestBuilderNormal).andExpect(status().is(403));
+    mockMvc.perform(requestBuilderVip).andExpect(status().is(403));
+
+  }
 
   @Test
-  public void uploadMovie_movieManager_admin_success() throws Exception {}
+  public void uploadMovie_movieManager_admin_success() throws Exception {
+
+    RequestBuilder requestBuilder = MockMvcRequestBuilders
+
+        .post("/uploadMovie")
+
+        .with(httpBasic("movie-manager@gmail.com", "movie-manager"));
+
+    mockMvc.perform(requestBuilder).andExpect(status().is(200));
+
+  }
 
   @Test
-  public void deleteMovie_normalMember_vipMember_fail() throws Exception {}
+  public void deleteMovie_normalMember_vipMember_fail() throws Exception {
+
+    RequestBuilder requestBuilderNormal = MockMvcRequestBuilders
+
+        .delete("/deleteMovie")
+
+        .with(httpBasic("normal@gmail.com", "normal"));
+
+    RequestBuilder requestBuilderVip = MockMvcRequestBuilders
+
+        .delete("/deleteMovie")
+
+        .with(httpBasic("vip@gmail.com", "vip"));
+
+
+    mockMvc.perform(requestBuilderNormal).andExpect(status().is(403));
+    mockMvc.perform(requestBuilderVip).andExpect(status().is(403));
+
+  }
 
   @Test
-  public void deleteMovie_movieManager_admin_success() throws Exception {}
+  public void deleteMovie_movieManager_admin_success() throws Exception {
+
+    RequestBuilder requestBuilderAdmin = MockMvcRequestBuilders
+
+        .delete("/deleteMovie")
+
+        .with(httpBasic("admin@gmail.com", "admin"));
+
+
+    mockMvc.perform(requestBuilderAdmin).andExpect(status().is(200));
+
+  }
 }
