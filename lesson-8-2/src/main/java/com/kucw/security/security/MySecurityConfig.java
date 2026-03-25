@@ -44,6 +44,10 @@ public class MySecurityConfig {
 
                         .requestMatchers("/deleteMovie").hasAnyRole("MOVIE_MANAGER", "ADMIN")
 
+                        // 訂閱/取消訂閱 權限設定
+                        .requestMatchers("/subscribe", "/unsubscribe")
+                        .hasAnyRole("NORMAL_MEMBER", "VIP_MEMBER", "ADMIN")
+
                         .anyRequest().denyAll())
 
                 .build();
