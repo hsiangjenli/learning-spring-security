@@ -32,7 +32,19 @@ public class MySecurityConfig {
 
                         .requestMatchers("/userLogin").authenticated()
 
-                        .anyRequest().authenticated())
+                        // movie 權限設定
+                        .requestMatchers("/getMovies")
+                        .hasAnyRole("NORMAL_MEMBER", "MOVIE_MANAGER", "ADMIN")
+
+                        .requestMatchers("/watchFreeMovie").hasAnyRole("NORMAL_MEMBER", "ADMIN")
+
+                        .requestMatchers("/watchVipMovie").hasAnyRole("VIP_MEMBER", "ADMIN")
+
+                        .requestMatchers("/uploadMovie").hasAnyRole("MOVIE_MANAGER", "ADMIN")
+
+                        .requestMatchers("/deleteMovie").hasAnyRole("MOVIE_MANAGER", "ADMIN")
+
+                        .anyRequest().denyAll())
 
                 .build();
     }

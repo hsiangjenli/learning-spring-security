@@ -1,6 +1,8 @@
 package com.kucw.security.dao;
 
+import java.util.List;
 import com.kucw.security.model.Member;
+import com.kucw.security.model.Role;
 
 public interface MemberDao {
 
@@ -8,4 +10,6 @@ public interface MemberDao {
     Member getMemberByEmail(String email);
 
     Integer createMember(Member member);
+
+    List<Role> getRolesByMemberId(Integer memberId);
 }
